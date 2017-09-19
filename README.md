@@ -7,4 +7,4 @@ test
 ### A web link
 [This is a web link][link]
 
-[link]:(www.google.com)
+[link]:(www.github.com)
