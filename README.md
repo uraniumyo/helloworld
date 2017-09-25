@@ -11,4 +11,4 @@ test
 ### A web link
 [This is a web link][link]
 
-[link]:(www.yahoo.jp)
+[link]:(https://github.com/uraniumyo)
