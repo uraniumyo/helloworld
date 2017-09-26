@@ -1,0 +1,29 @@
+### Sampling 100 values from a log-normal distribution
+```{r }
+# with mu=1, sigma=0.25 
+x<- rnorm(100,1,0.25)
+```
+
+### plot a histogram of the distribution 
+```{r}
+# histogram 
+hist(x,main="histogram of 100 values of log-normal distribution")
+```
+
+
+
+```{r}
+#histogram on log scale
+hist(log(x),main="histogram of 100 values of log-normal distribution on log scale")
+```
+
+### Mean and Variance of the sampling 
+
+```{r}
+#mean
+mean(x)
+
+#variance
+var(x)
+```
+
