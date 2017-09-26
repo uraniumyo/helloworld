@@ -6,8 +6,8 @@ test for STA426 course homework1
 :smile:
 
 ### this is a picture ###
-![This is a picture](https://www.ethz.ch/de/die-eth-zuerich/thematische-schwerpunkte/medizin/_jcr_content/par/fullwidthimage/image.imageformat.fullwidth.1494184937.png)
+![random picture from ethz.ch](https://www.ethz.ch/de/die-eth-zuerich/thematische-schwerpunkte/medizin/_jcr_content/par/fullwidthimage/image.imageformat.fullwidth.1494184937.png)
 
 ### this is a web link ###
-[This is a web link](https://www.ethz.ch/de.html)
+[visit ethz website](https://www.ethz.ch/de.html)
 
