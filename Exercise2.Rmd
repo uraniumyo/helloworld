@@ -1,0 +1,146 @@
+---
+title: "STA426 Homework 2"
+author: "Yao Yao"
+date: "01 10 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exploratory Data Analysis
+
+Do an exploratory data analysis of a matrix of expression values. Load the data and display:
+* distributions: *boxplot*, *density*, *limma::plotDensities*
+* normalization: *limma::normalizeQuantiles*
+* clustering: *hclust*
+* heatmap: *heatmap.2* or *pheatmap*
+* correlation matrix: *cor* and *image*
+* reduced dimensionality representation: *cmdscale* and *prcomp*
+
+colorcluser 
+
+## Data Import
+```{r }
+anno = read.table("SampleAnnotation.txt", as.is=TRUE, sep="\t", quote="",
+                  row.names=1, header=TRUE)
+x = read.table("expressiondata.txt", as.is=TRUE, sep="\t", quote="", row.names=1, header=TRUE, check.names = FALSE)
+x = as.matrix(x)
+```
+
+## Define samples and colors and phenotype
+```{r}
+samples = rownames(anno)
+colors = rainbow(nrow(anno))
+isNorm = anno$TissueType == "norm"
+isSick = anno$TissueType == "sick"
+isAcute = anno$TissueType == "acute"
+
+colorcluster= anno$TissueType
+colorcluster[which(anno$TissueType=="norm")] ="green"
+colorcluster[which(anno$TissueType=="sick")] ="yellow"
+colorcluster[which(anno$TissueType=="acute")] ="red"
+
+colorclusterlegend <-c("green","yellow","red")
+names(colorclusterlegend)<-c("norm","sick","acute")
+
+```
+
+## log transformation and normalization
+```{r}
+#all values changed to log values
+logvalue <- log(x)  
+#all log values normalized
+normed <- limma::normalizeQuantiles(logvalue)
+```
+
+## Distributions in boxplots and densities
+
+```{r}
+# boxplot 
+boxplot(logvalue,names=samples,las=2, col=colors, main='boxplot')
+```
+
+##### The boxplot shows the overall range and distribution of the gene expression level in each sample. All samples have some outliers that are highly expressed in this experiment.
+
+```{r}
+# density
+plot(density(logvalue[,1]),main = 'density plot')
+for(i in 2:ncol(logvalue)){
+  lines(density(logvalue[,i]),main=colnames(logvalue)[i],col=colors[i])
+}
+legend("topright",col = colors,legend = samples,pch = 16,y.intersp = 0.77)
+
+```
+
+
+```{r}
+# limma::plotDensities
+limma::plotDensities(logvalue,main="limma::densities",col=colors,legend =FALSE)
+legend("topright",col= colors, legend= samples, pch=16,y.intersp = 0.78)
+```
+
+## Clustering 
+
+```{r}
+# cluster dendrogram by hclust 
+distance <- dist(t(normed))
+plot(hclust(distance))
+```
+
+##### The dendrogram shows the results of a hierarchical clustering analysis of gene expression levels in each sample. Samples in the same category (normal, sick or acute) tend to have closer distance in the cluster dendrogram in this experiment.
+
+## Heatmaps
+
+```{r}
+# heatmap.2
+library(gplots)
+library(genefilter)
+
+rv <- rowVars(x)
+orderfilteredgene <- order(-rv)[1:500]
+heatmap.2(x[orderfilteredgene,])
+
+```
+
+
+##### Before drawing the heatmap we pick the 500 genes with the top variances over all samples using genefilter. On top of the heatmap is the dendrogram and on the side is a hierarchical clustering.
+
+## Correlation 
+```{r}
+# correlation matrix
+cor <- cor(normed)
+#corr <- (cor - min(cor))/(max(cor) - min(cor))
+
+# image
+library(corrplot)
+corrplot(cor,cl.lim=c(0.9,1), main= 'correlation matrix', is.corr=FALSE)
+```
+
+##### Since all correlations are high that all values are over 0.9, here we display the correlation matrix in the range from 0.9 to 1. All samples have stronger correlations within their annotation groups (norm,sick or acute) than with other samples.
+
+
+##Reduced Dimensionality Representation
+
+
+```{r}
+# cmdscale: Classical (Metric) Multidimensional Scaling
+scale<-cmdscale(distance,k=2)
+
+plot(scale,col=colorcluster, pch =16, main="reduced dimensionality representation by cmdscale")
+legend("topleft",legend = names(colorclusterlegend), col=colorclusterlegend,pch =16)
+
+```
+
+
+
+```{r}
+# prcomp: Principal Components Analysis
+a<-prcomp(scale)
+plot(a$x,col=colorcluster,pch =16,main = "reduced dimensionality representation by prcomp")
+legend("topleft",legend = names(colorclusterlegend), col=colorclusterlegend,pch =16)
+
+```
+
+##### Above are the reduced dimensionality representations by PCA and cmdscale respectively.The annotation groups(norm, sick and acute) show very similar distributions with the two methods.
