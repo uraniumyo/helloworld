@@ -121,7 +121,7 @@ corrplot(cor,cl.lim=c(0.9,1), main= 'correlation matrix', is.corr=FALSE)
 ##### Since all correlations are high that all values are over 0.9, here we display the correlation matrix in the range from 0.9 to 1. All samples have stronger correlations within their annotation groups (norm,sick or acute) than with other samples.
 
 
-##Reduced Dimensionality Representation
+## Reduced Dimensionality Representation
 
 
 ```{r}
